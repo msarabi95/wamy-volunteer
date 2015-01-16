@@ -15,6 +15,7 @@ class Team(models.Model):
 class Event(models.Model):
     name = models.CharField(u"الاسم", max_length=128)
     team = models.ForeignKey(Team, verbose_name=u"الفريق")
+    # allow_multiple = models.BooleanField(default=False)  # allow multiple codes to be submitted per user per event
 
     def __unicode__(self):
         return self.name
