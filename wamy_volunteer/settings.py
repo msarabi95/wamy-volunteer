@@ -36,6 +36,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'guardian',
+    'userena',
+    'easy_thumbnails',
+    'accounts',
+    'teams',
+    'codes',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -65,7 +71,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ar-sa'
 
 TIME_ZONE = 'UTC'
 
@@ -80,3 +86,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Email
+
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'  # This needs to be modified in deployment
+
+
+# Authentication and user management
+
+ANONYMOUS_USER_ID = -1
+
+AUTH_PROFILE_MODULE = 'accounts.UserProfile'
+
+AUTHENTICATION_BACKENDS = (
+    'userena.backends.UserenaAuthenticationBackend',
+    'guardian.backends.ObjectPermissionBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+USERENA_SIGNIN_REDIRECT_URL = '/accounts/%(username)s/'
+LOGIN_URL = '/accounts/signin/'
+LOGOUT_URL = '/accounts/signout/'
