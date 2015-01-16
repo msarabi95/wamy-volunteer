@@ -1,3 +1,10 @@
 from django.contrib import admin
+from codes.models import Category, Code
 
-# Register your models here.
+
+class CodeAdmin(admin.ModelAdmin):
+    list_display = ("string", "is_downloaded", "is_redeemed")
+    pass
+
+admin.site.register(Category)
+admin.site.register(Code, CodeAdmin)
