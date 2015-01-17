@@ -20,7 +20,7 @@ class Event(models.Model):
     def admin_links(self):
         kw = {"args": (self.id,)}
         links = [
-            (u"اطلب رموزًا", ""),
+            (u"أنشئ رموزًا", ""),
             (u"استعرض رموز هذا النشاط", ""),
         ]
         for i, (text, url) in enumerate(links):
