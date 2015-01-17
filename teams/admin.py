@@ -1,6 +1,10 @@
+# coding=utf-8
 from django.conf.urls import patterns, url
-from django.contrib import admin
-from django.shortcuts import render
+from django.contrib import admin, messages
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from codes.forms import CreateCodeForm
 from teams.models import Team, Event
 
 
@@ -26,7 +30,25 @@ class EventAdmin(admin.ModelAdmin):
         GET: show the code creation form.
         POST: create codes according to what's posted.
         """
-        return render(request, "admin/teams/event/codes.html")
+        event = get_object_or_404(Event, pk=event_id)
+
+        if request.method == "POST":
+            form = CreateCodeForm(event, request.POST)
+            if form.is_valid():
+                form.create_codes()
+
+                messages.success(request, u"تم إنشاء الرموز المطلوبة.")
+
+                bits = (self.model._meta.app_label, self.model.__name__.lower())
+                change_url = reverse("admin:%s_%s_change" % bits, args=(event_id,))
+                return HttpResponseRedirect(change_url)
+        else:
+            form = CreateCodeForm(event)
+
+        context = {"form": form, "opts": event._meta,
+                   "original": event,
+                   "title": u"أنشئ رموزًا"}
+        return render(request, "admin/teams/event/codes.html", context)
 
 
 admin.site.register(Team)

@@ -1,4 +1,4 @@
-{% extends "admin/base_site.html" %}
+{% extends "admin/change_form.html" %}
 
 {% load i18n %}
 
@@ -18,5 +18,21 @@
 {% endblock %}
 
 {% block content %}
+    <div id="content-main">
+        {# <!-- TODO: description and explanation --> #}
+        <form action="" method="post">
+            {% csrf_token %}
+            <div>
+                <fieldset class="module aligned">
+                    {{ form.as_p }}
+                    {# <!-- TODO: styling of the form --> #}
+                </fieldset>
 
+            <div class="submit-row">
+                <input type="submit" value="أنشئ" class="default" name="_save">
+            </div>
+
+            </div>
+        </form>
+    </div>
 {% endblock %}

@@ -1,4 +1,5 @@
 # coding=utf-8
+from django.core.urlresolvers import reverse
 from django.db import models
 
 class Team(models.Model):
@@ -18,10 +19,11 @@ class Event(models.Model):
     # allow_multiple = models.BooleanField(default=False)  # allow multiple codes to be submitted per user per event
 
     def admin_links(self):
+        # TODO: the link might need some styling to have a more interesting look?
         kw = {"args": (self.id,)}
         links = [
-            (u"أنشئ رموزًا", ""),
-            (u"استعرض رموز هذا النشاط", ""),
+            (u"أنشئ رموزًا", reverse("admin:create_codes", args=(self.pk, ))),
+            (u"استعرض رموز هذا النشاط", ""),  # TODO: add proper reverse statement here
         ]
         for i, (text, url) in enumerate(links):
             links[i] = "<a href='%s'>%s</a>" % (url, text)
