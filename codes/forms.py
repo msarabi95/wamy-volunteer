@@ -1,5 +1,5 @@
 from django import forms
-from codes.models import Category, Code
+from codes.models import Category, Code, Order
 
 
 class CreateCodeForm(forms.Form):
@@ -24,9 +24,12 @@ class CreateCodeForm(forms.Form):
             def get_category(field_name):
                 return Category.objects.get(pk=int(field_name.split("_")[-1]))
 
+            order = Order.objects.create(event=self.event)
+
             for field in self.cleaned_data:
                 for idx in range(self.cleaned_data[field]):
                     Code.objects.create(category=get_category(field),
-                                        event=self.event)
+                                        event=self.event,
+                                        order=order)
 
             self._created_codes = True  # Prevent the form from being processed more than once

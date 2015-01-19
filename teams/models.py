@@ -2,6 +2,7 @@
 from django.core.urlresolvers import reverse
 from django.db import models
 
+
 class Team(models.Model):
     name = models.CharField(u"الاسم", max_length=128)
 
@@ -15,7 +16,7 @@ class Team(models.Model):
 
 class Event(models.Model):
     name = models.CharField(u"الاسم", max_length=128)
-    team = models.ForeignKey(Team, verbose_name=u"الفريق")
+    team = models.ForeignKey(Team, related_name="events", verbose_name=u"الفريق")
     # allow_multiple = models.BooleanField(default=False)  # allow multiple codes to be submitted per user per event
 
     def admin_links(self):

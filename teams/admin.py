@@ -4,18 +4,31 @@ from django.contrib import admin, messages
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from codes.admin import CodeAdmin
 from codes.forms import CreateCodeForm
+from codes.models import Code, Order
 from teams.models import Team, Event
 
+
+class OrderTabularInline(admin.TabularInline):
+    model = Order
+    readonly_fields = ("description", "date_created", "is_downloaded", "admin_links", )
+    extra = 0
+
+    def has_add_permission(self, request):
+        """
+        Prevent addition of orders manually.
+        """
+        return False
 
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "team", "admin_links")
+    inlines = (OrderTabularInline, )
 
-    # TODO: create codes view and url
     def get_urls(self):
         """
-        Add the entries view to urls.
+        Add the create codes view to urls.
         """
         urls = super(EventAdmin, self).get_urls()
         extra_urls = patterns("",
@@ -49,7 +62,6 @@ class EventAdmin(admin.ModelAdmin):
                    "original": event,
                    "title": u"أنشئ رموزًا"}
         return render(request, "admin/teams/event/codes.html", context)
-
 
 admin.site.register(Team)
 admin.site.register(Event, EventAdmin)
