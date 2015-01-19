@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db.models.aggregates import Sum
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from codes.forms import RedeemCodeForm
@@ -25,4 +26,6 @@ def report(request):
     """
     Show a summary report for the user's code submissions.
     """
-    pass
+    user = request.user
+    credit_sum = user.redeemed_codes.aggregate(sum=Sum("category__credit"))["sum"]
+    return render(request, "codes/report.html", {"user": user, "credit_sum": credit_sum})

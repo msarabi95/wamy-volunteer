@@ -1,0 +1,30 @@
+{% extends "codes_base.html" %}
+
+{% block content %}
+    <h1>{{ user.profile.get_ar_full_name }}</h1>
+    <h3>Total credit: {{ credit_sum }}</h3>
+
+    <br><hr><br>
+
+    <table>
+        <thead>
+            <tr>
+                <td>Event</td>
+                <td>Role</td>
+                <td>Points</td>
+                <td>Date redeemed</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for code in user.redeemed_codes.all %}
+            <tr>
+                <td>{{ code.event.name }}</td>
+                <td>{{ code.category.name }}</td>
+                <td>{{ code.get_credit }}</td>
+                <td>{{ code.date_redeemed|date:"j F" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
