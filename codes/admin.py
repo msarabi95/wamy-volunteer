@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.conf.urls import url, patterns
 from django.http.response import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from codes.models import Category, Code, Order
 
 
 class CodeAdmin(admin.ModelAdmin):
     list_display = ("string", "event", "category", "is_downloaded", "is_redeemed", "user")
-    # TODO: make all fields readonly
     readonly_fields = ("string", )
     search_fields = ("string", "event__name", "user__username")
     list_filter = ("category__name",)
@@ -21,6 +22,7 @@ class CodeAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ("description",  "date_created", "event", "is_downloaded", "admin_links", )
     readonly_fields = ("description",  "date_created", "event", "is_downloaded", "admin_links", )
+    search_fields = ("event", )
 
     COUPON = "coupon"
     LINK = "link"
@@ -54,6 +56,16 @@ class OrderAdmin(admin.ModelAdmin):
         return extra_urls + urls
 
     def download_order(self, request, order_id, download_type):
+        """
+        Download the passed order as coupons or short links.
+        """
+        order = get_object_or_404(Order, pk=order_id)
+
+        # TODO: implement downloading
+
+        # Mark codes as downloaded
+        order.codes.update(date_downloaded=timezone.now())
+
         return HttpResponse("HELLO")
 
 

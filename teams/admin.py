@@ -24,6 +24,7 @@ class OrderTabularInline(admin.TabularInline):
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "team", "admin_links")
+    search_fields = ("name", "team__name")
     inlines = (OrderTabularInline, )
 
     def get_urls(self):
