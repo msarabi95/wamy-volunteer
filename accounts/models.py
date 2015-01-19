@@ -33,6 +33,12 @@ class UserProfile(UserenaBaseProfile):
     academic_year = models.PositiveIntegerField(u"السنة الدراسية", choices=ACADEMIC_YEAR_CHOICES, default=1, blank=True)
     specialty = models.CharField(u"التخصص", max_length=128, blank=True)
 
+    def get_ar_full_name(self):
+        return "%s %s %s" % (self.ar_first_name, self.ar_middle_name, self.ar_last_name, )
+
+    def get_en_full_name(self):
+        return "%s %s %s" % (self.en_first_name, self.en_middle_name, self.en_last_name, )
+
     def __unicode__(self):
         return u"ملف المستخدم: %s" % self.user.__unicode__()
 
