@@ -9,7 +9,7 @@
         <a href="{% url 'admin:create_codes' original.pk %}" class="addlink">أنشئ رموزًا</a>
     </li>
     <li>
-        <a href="">استعرض رموز هذا النشاط</a>
+        <a href="{% url 'admin:codes_code_changelist' %}?event__id__exact={{ original.id }}">استعرض رموز هذا النشاط</a>
     </li>
     <li>
         <a href="history/" class="historylink">{% trans "History" %}</a>

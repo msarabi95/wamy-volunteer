@@ -39,15 +39,24 @@ class Order(models.Model):
     description.short_description = u"الوصف"
 
     def admin_links(self):
-        kw = {"args": (self.id,)}
-        links = [
-            (u"حمل كوبونات", reverse("admin:download_coupons", args=(self.id, ))),
-            (u"حمل روابط قصيرة", reverse("admin:download_links", args=(self.id, ))),
-            (u"استعرض رموز هذا الطلب", ""),  # TODO: add proper reverse statement here
-        ]
-        for i, (text, url) in enumerate(links):
-            links[i] = "<a href='%s'>%s</a>" % (url, text)
-        return "<br>".join(links)
+        if self.id:
+            kw = {"args": (self.id, )}
+
+            # Construct the filter url (which will show the codes of a certain order)
+            bits = (self._meta.app_label, Code.__name__.lower())
+            changelist_url = reverse("admin:%s_%s_changelist" % bits)
+            filter_url = "%s?order__id__exact=%s" % (changelist_url, self.id)
+
+            links = [
+                (u"حمل كوبونات", reverse("admin:download_coupons", **kw)),
+                (u"حمل روابط قصيرة", reverse("admin:download_links", **kw)),
+                (u"استعرض رموز هذا الطلب", filter_url),
+            ]
+            for i, (text, url) in enumerate(links):
+                links[i] = "<a href='%s'>%s</a>" % (url, text)
+            return "<br>".join(links)
+        else:
+            return ""
     admin_links.allow_tags = True
     admin_links.short_description = ""
 

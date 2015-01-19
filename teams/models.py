@@ -22,9 +22,17 @@ class Event(models.Model):
     def admin_links(self):
         # TODO: the link might need some styling to have a more interesting look?
         kw = {"args": (self.id,)}
+
+        from codes.models import Code
+
+        # Construct the filter url (which will show the codes of a certain order)
+        bits = (Code._meta.app_label, Code.__name__.lower())
+        changelist_url = reverse("admin:%s_%s_changelist" % bits)
+        filter_url = "%s?%s__id__exact=%s" % (changelist_url, self.__class__.__name__.lower(), self.id)
+
         links = [
             (u"أنشئ رموزًا", reverse("admin:create_codes", args=(self.pk, ))),
-            (u"استعرض رموز هذا النشاط", ""),  # TODO: add proper reverse statement here
+            (u"استعرض رموز هذا النشاط", filter_url),
         ]
         for i, (text, url) in enumerate(links):
             links[i] = "<a href='%s'>%s</a>" % (url, text)
