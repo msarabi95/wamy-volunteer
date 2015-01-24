@@ -1,0 +1,131 @@
+<!doctype html>{% load staticfiles %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style type="text/css">
+
+    @page {
+        size: a4 portrait;
+
+        @frame {
+            left: 10mm;
+            width: 190mm;
+            top: 7.5mm;
+            height: 70mm;
+        }
+
+        @frame {
+            left: 10mm;
+            width: 190mm;
+            top: 90mm;
+            height: 70mm;
+        }
+
+        @frame {
+            left: 10mm;
+            width: 190mm;
+            top: 172.5mm;
+            height: 70mm;
+            /* -pdf-frame-border: 1; */
+        }
+    }
+
+    /* @font-face {font-family: "GE Dinar One"; font-weight: lighter; src: url('http://msarabi95.comyr.com/HelpMacNet-Fonts-563.otf');}
+    @font-face {font-family: "GE Dinar One"; font-weight: normal; src: url('http://msarabi95.comyr.com/HelpMacNet-Fonts-565.otf');} */
+
+    html {
+        color: #333333;
+    }
+
+    .coupon {
+        height: auto;
+        /* border: 1px solid #000; */
+        border-top: 0.1px solid #000;
+        border-bottom: 0.1px solid #000;
+
+
+    }
+
+    tr td th {
+        border: none;
+    }
+
+    .event-name, .code-type {
+        text-align: center;
+        font-size: 1.5em;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .code-type {
+        font-size: 1em;
+    }
+
+    .right {
+        /* padding: 1cm; */
+        border-right: 0.1px solid #000;
+        vertical-align: bottom;
+        padding-bottom: 1cm;
+    }
+
+    .code {
+        text-align: center;
+        font-size: 3em;
+        font-weight: 10;
+        margin: 0 1.5cm 0 1.5cm;
+        padding-top: 0.25cm;
+        padding-bottom: -0.25cm;
+        border: 1px solid #4F81BD;
+        color: #345c8b;
+        font-family: Courier New;
+    }
+
+    .left {
+        border-left: 0.1px solid #000;
+        width: 40%;
+    }
+
+    </style>
+</head>
+
+<body>
+    {% for category in order.get_categories %}
+    {% for code in category %}
+
+    <table class="coupon">
+
+        <tr>
+            <td class="left">
+                <div>
+                    <pdf:barcode value="{% url 'codes:redeem' %}?code={{ code.string }}" type="qr" barwidth="150" barheight="150" />
+                </div>
+                <div class="qr-textbox">
+                    <p class="event-name">
+                        {{ code.event.name }}
+                    </p>
+                    <p class="code-type">
+                        {{ code.category.name }}
+                    </p>
+                </div>
+            </td>
+            <td class="right">
+                <img src="logo.png" alt="I see." />
+                <p>
+                    WOW
+                </p>
+                <p class="code">
+                    {{ code.spaced_string }}
+                </p>
+            </td>
+        </tr>
+
+    </table>
+
+    <pdf:nextframe>
+    {% endfor %}
+
+    <pdf:nextpage>
+    {% endfor %}
+</body>
+</html>

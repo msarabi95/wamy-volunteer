@@ -1,9 +1,15 @@
+import os
+from django.conf import settings
 from django.contrib import admin
 from django.conf.urls import url, patterns
+from django.core.exceptions import PermissionDenied
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.template import Context
+from django.template.loader import get_template
 from django.utils import timezone
 from codes.models import Category, Code, Order
+from xhtml2pdf import pisa
 
 
 class CodeAdmin(admin.ModelAdmin):
@@ -59,14 +65,40 @@ class OrderAdmin(admin.ModelAdmin):
         """
         Download the passed order as coupons or short links.
         """
+        # --- Permission checks ---
+        if not request.user.is_authenticated():
+            raise PermissionDenied
+
+        if not (request.user.is_staff or request.user.is_superuser):
+            raise PermissionDenied
+
         order = get_object_or_404(Order, pk=order_id)
 
-        # TODO: implement downloading
+        if download_type == self.COUPON:
+            # Render html content through html template with context
+            template = get_template('codes/includes/coupons.html')
+            html = template.render(Context({"order": order}))
+
+            # Write PDF to file
+            file = open(os.path.join(settings.MEDIA_ROOT, 'order_%s.pdf' % order.pk), "w+b")
+            pisaStatus = pisa.CreatePDF(html, dest=file)
+
+            # Return PDF document through a Django HTTP response
+            file.seek(0)
+            pdf = file.read()
+            file.close()
+            os.remove(os.path.join(settings.MEDIA_ROOT, file.name))
+
+            response = HttpResponse(pdf, content_type='application/pdf')
+
+        elif download_type == self.LINK:
+
+            response = HttpResponse("HELLO")
 
         # Mark codes as downloaded
         order.codes.update(date_downloaded=timezone.now())
 
-        return HttpResponse("HELLO")
+        return response
 
 
 class CategoryAdmin(admin.ModelAdmin):
