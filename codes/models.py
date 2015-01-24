@@ -78,6 +78,15 @@ class Order(models.Model):
     is_downloaded.boolean = True
     is_downloaded.short_description = u"تم تحميله؟"
 
+    def get_categories(self):
+        """
+        Iterate over the categories includes in this order.
+        Yield a queryset for each category including the codes within this order that are of that category.
+        """
+        for category in Category.objects.all():
+            if self.codes.filter(category=category).exists():
+                yield self.codes.filter(category=category)
+
     def __unicode__(self):
         return "%s - %s" % (self.event.name, str(self.date_created))
 
@@ -113,6 +122,14 @@ class Code(models.Model):
                 if not self.__class__.objects.filter(string=random_string).exists():
                     break
             self.string = random_string
+
+    def spaced_string(self):
+        spaced_string = ""
+        for idx in range(len(self.string)):
+            spaced_string += self.string[idx]
+            if (idx + 1) % 4 == 0 and not (idx == len(self.string) - 1):
+                spaced_string += " "
+        return spaced_string
 
     def get_credit(self):
         return self.category.credit
