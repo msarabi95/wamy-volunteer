@@ -1,15 +1,10 @@
-import os
-from django.conf import settings
 from django.contrib import admin
 from django.conf.urls import url, patterns
 from django.core.exceptions import PermissionDenied
 from django.http.response import HttpResponse
-from django.shortcuts import get_object_or_404
-from django.template import Context
-from django.template.loader import get_template
+from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from codes.models import Category, Code, Order
-from xhtml2pdf import pisa
 
 
 class CodeAdmin(admin.ModelAdmin):
@@ -75,21 +70,13 @@ class OrderAdmin(admin.ModelAdmin):
         order = get_object_or_404(Order, pk=order_id)
 
         if download_type == self.COUPON:
-            # Render html content through html template with context
-            template = get_template('codes/includes/coupons.html')
-            html = template.render(Context({"order": order}))
 
-            # Write PDF to file
-            file = open(os.path.join(settings.MEDIA_ROOT, 'order_%s.pdf' % order.pk), "w+b")
-            pisaStatus = pisa.CreatePDF(html, dest=file)
+            domain = request.get_host()
+            endpoint = "http://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + domain
 
-            # Return PDF document through a Django HTTP response
-            file.seek(0)
-            pdf = file.read()
-            file.close()
-            os.remove(os.path.join(settings.MEDIA_ROOT, file.name))
-
-            response = HttpResponse(pdf, content_type='application/pdf')
+            response = render(request, 'codes/includes/coupons.html', {"order": order,
+                                                                            "domain": domain,
+                                                                            "endpoint": endpoint})
 
         elif download_type == self.LINK:
 

@@ -5,50 +5,53 @@
     <title>{{ title }}</title>
     <style type="text/css">
 
-    @page {
-        size: a4 portrait;
-
-        @frame {
-            left: 10mm;
-            width: 190mm;
-            top: 7.5mm;
-            height: 70mm;
-        }
-
-        @frame {
-            left: 10mm;
-            width: 190mm;
-            top: 90mm;
-            height: 70mm;
-        }
-
-        @frame {
-            left: 10mm;
-            width: 190mm;
-            top: 172.5mm;
-            height: 70mm;
-            /* -pdf-frame-border: 1; */
-        }
-    }
-
-    /* @font-face {font-family: "GE Dinar One"; font-weight: lighter; src: url('http://msarabi95.comyr.com/HelpMacNet-Fonts-563.otf');}
-    @font-face {font-family: "GE Dinar One"; font-weight: normal; src: url('http://msarabi95.comyr.com/HelpMacNet-Fonts-565.otf');} */
+    @font-face {font-family: "GE Dinar One"; font-weight: lighter; src: url({% static 'codes/fonts/ge-dinar-one-light.woff' %});}
+    @font-face {font-family: "GE Dinar One"; font-weight: normal; src: url({% static 'codes/fonts/ge-dinar-one-med.woff' %});}
 
     html {
-        color: #333333;
+        font-family: "GE Dinar One";
+    }
+
+    .light {
+        font-weight: lighter;
     }
 
     .coupon {
-        height: auto;
-        /* border: 1px solid #000; */
-        border-top: 0.1px solid #000;
-        border-bottom: 0.1px solid #000;
+        height: 70mm;
+        width: 195mm;
+        border: 2px solid #000;
+        margin-bottom: 5mm;
+        background-image: url('{% static 'codes/niqaticardbackground.png' %}');
+        background-size: 195mm auto;
+        background-position: 0% 80%;
+        clear: both;
+    }
 
-
+    @media print {
+        .coupon {page-break-inside: avoid;}
     }
 
     tr td th {
         border: none;
+    }
+
+    .right {
+        text-align: center;
+        vertical-align: bottom;
+        padding-bottom: 1cm;
+    }
+
+    .left {
+        width: 30%;
+    }
+
+    .qr-image {
+        text-align: center;
+    }
+
+    .qr-image img {
+        padding: 1mm;
+        background-color: #fff;
     }
 
     .event-name, .code-type {
@@ -62,28 +65,24 @@
         font-size: 1em;
     }
 
-    .right {
-        /* padding: 1cm; */
-        border-right: 0.1px solid #000;
-        vertical-align: bottom;
-        padding-bottom: 1cm;
+    .right img {
+        width: 120px;
+    }
+
+    span .url {
+        font-family: Arial;
     }
 
     .code {
         text-align: center;
-        font-size: 3em;
+        font-size: 2em;
         font-weight: 10;
-        margin: 0 1.5cm 0 1.5cm;
-        padding-top: 0.25cm;
-        padding-bottom: -0.25cm;
-        border: 1px solid #4F81BD;
-        color: #345c8b;
         font-family: Courier New;
-    }
 
-    .left {
-        border-left: 0.1px solid #000;
-        width: 40%;
+        margin: 0 1.5cm 0 1.5cm;
+        padding: 1mm;
+
+        background-color: #fff;
     }
 
     </style>
@@ -91,14 +90,17 @@
 
 <body>
     {% for category in order.get_categories %}
+
+    <h2>{{ category.name }}</h2>
+
     {% for code in category %}
 
     <table class="coupon">
 
         <tr>
             <td class="left">
-                <div>
-                    <pdf:barcode value="{% url 'codes:redeem' %}?code={{ code.string }}" type="qr" barwidth="150" barheight="150" />
+                <div class="qr-image">
+                    <img src="{{ endpoint }}{% url 'codes:redeem' %}?code={{ code.string }}"/>
                 </div>
                 <div class="qr-textbox">
                     <p class="event-name">
@@ -109,11 +111,20 @@
                     </p>
                 </div>
             </td>
-            <td class="right">
-                <img src="logo.png" alt="I see." />
+            <td class="right" dir="rtl">
+                <img src="{% static 'codes/logo.png' %}" alt="I see." />
+
                 <p>
-                    WOW
+                    شكرًا لمشاركتك في أنشطة اللجنة الطبية بالندوة العالمية للشباب الإسلامي.<br>
+                    <span class="light">
+                يمكنك تسجيل مشاركتك من خلال:<br>
+                        ١. إدخال الرمز أدناه من خلال الرابط
+                        <span dir="ltr" class="url">{{ domain }}{% url 'codes:redeem' %}</span>
+                        .<br>
+                        ٢. مسح رمز الـQR.
+                    </span>
                 </p>
+
                 <p class="code">
                     {{ code.spaced_string }}
                 </p>
@@ -122,10 +133,11 @@
 
     </table>
 
-    <pdf:nextframe>
     {% endfor %}
 
-    <pdf:nextpage>
+
+    <!-- pagebreak -->
+
     {% endfor %}
 </body>
 </html>

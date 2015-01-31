@@ -18,6 +18,7 @@ class CreateCodeForm(forms.Form):
         self._created_codes = False  # A flag to prevent multiple processing of the same form
         for idx, category in enumerate(Category.objects.all()):
             self.fields["category_%s" % (idx + 1)] = forms.IntegerField(label=category.name)
+            # TODO: make it possible to leave the field blank (considered as 0); only 1 should be more than 0
 
     def create_codes(self):
         """

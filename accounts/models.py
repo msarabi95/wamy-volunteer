@@ -5,7 +5,9 @@ from django.db import models
 # Create your models here.
 from userena.models import UserenaBaseProfile
 
+
 class UserProfile(UserenaBaseProfile):
+    # FIXME: Shouldn't be `blank=True`
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile')
 
     ar_first_name = models.CharField(u"الاسم الأول", max_length=30, blank=True)
