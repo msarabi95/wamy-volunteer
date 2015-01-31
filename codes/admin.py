@@ -1,7 +1,8 @@
+from django.conf import settings
 from django.contrib import admin
 from django.conf.urls import url, patterns
+from django.contrib.sites.models import Site
 from django.core.exceptions import PermissionDenied
-from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from codes.models import Category, Code, Order
@@ -68,20 +69,20 @@ class OrderAdmin(admin.ModelAdmin):
             raise PermissionDenied
 
         order = get_object_or_404(Order, pk=order_id)
+        domain = Site.objects.get_current().domain
 
         if download_type == self.COUPON:
-
-            domain = request.get_host()
             endpoint = "http://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + domain
 
             response = render(request, 'codes/includes/coupons.html', {"order": order,
-                                                                            "domain": domain,
-                                                                            "endpoint": endpoint})
-
+                                                                       "domain": domain,
+                                                                       "endpoint": endpoint})
         elif download_type == self.LINK:
+            endpoint = "https://api-ssl.bitly.com/v3/shorten?format=txt&access_token=%(api_key)s&longUrl=" % {"api_key": settings.BITLY_KEY}
 
-            response = HttpResponse("HELLO")
-
+            response = render(request, 'codes/includes/links.html', {"order": order,
+                                                                     "domain": domain,
+                                                                     "endpoint": endpoint})
         # Mark codes as downloaded
         order.codes.update(date_downloaded=timezone.now())
 

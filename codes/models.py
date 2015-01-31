@@ -106,6 +106,8 @@ class Code(models.Model):
                              verbose_name=u"المستخدم")
     date_redeemed = models.DateTimeField(null=True, blank=True, verbose_name=u"تاريخ الاستخدام")
 
+    # to avoid generating a new link with each download, we'll store the link in our db; no need to do the same for QRs.
+    short_link = models.URLField(verbose_name=u"رابط قصير", null=True, blank=True)
     date_downloaded = models.DateTimeField(null=True, blank=True, verbose_name=u"تاريخ التحميل")
 
     def __init__(self, *args, **kwargs):
@@ -124,6 +126,9 @@ class Code(models.Model):
             self.string = random_string
 
     def spaced_string(self):
+        """
+        Return the code string in the format 'XXXX XXXX XXXX XXXX'
+        """
         spaced_string = ""
         for idx in range(len(self.string)):
             spaced_string += self.string[idx]
