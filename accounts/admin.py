@@ -16,8 +16,8 @@ class CustomUserAdmin(UserenaAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name',
                     'is_staff', 'is_active', 'date_joined', 'get_credit_sum')
 
-    def queryset(self, request):
-        qs = super(CustomUserAdmin, self).queryset(request)
+    def get_queryset(self, request):
+        qs = super(CustomUserAdmin, self).get_queryset(request)
         return qs.annotate(credit_sum=Sum('redeemed_codes__category__credit'))
 
     def get_credit_sum(self, obj):
