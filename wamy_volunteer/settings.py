@@ -37,10 +37,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'accounts',
     'guardian',
     'userena',
     'easy_thumbnails',
-    'accounts',
     'teams',
     'codes',
 )
@@ -106,9 +106,11 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-USERENA_SIGNIN_REDIRECT_URL = '/accounts/%(username)s/'
 LOGIN_URL = '/accounts/signin/'
 LOGOUT_URL = '/accounts/signout/'
+
+USERENA_SIGNIN_REDIRECT_URL = '/'
+USERENA_REDIRECT_ON_SIGNOUT = '/'
 
 BITLY_KEY = 'a033d017dadeedd983b33286847b63a850565fff'
 

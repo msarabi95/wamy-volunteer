@@ -1,0 +1,50 @@
+{% extends "codes_base.html" %}
+
+{% block title %}Userena{% endblock %}
+
+{% block extrastyle %}
+{% block meta %}{% endblock %}
+
+<style type="text/css">
+    div.panel {
+        width: 60%;
+        margin: auto;
+    }
+
+    .checkbox label {
+        padding-right: 20px;
+    }
+
+    input[type=checkbox] {
+        margin-left: 0px;
+        margin-right: -20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block extrascript %}
+<script type="text/javascript">
+// $(document).ready(function () {
+    // wrap the form in a panel
+    var $content = $("#content-container").contents();
+    $content.wrapAll("<div class='panel panel-default'><div class='panel-body'></div></div>");
+
+    // add .form-control to all inputs
+    var $formInputs = $("form input, form select");
+    $formInputs.addClass("form-control");
+
+    // style the primary button differently
+    var $submitButton = $("form input[type=submit]");
+    $submitButton.removeClass("form-control").addClass("btn btn-success btn-block");
+
+    var $checkBoxes = $("form input[type=checkbox]");
+    $checkBoxes.removeClass("form-control");
+
+    // style error lists
+    var $errors = $(".errorlist");
+    $errors.addClass("bg-danger");
+// });
+</script>
+{% endblock %}

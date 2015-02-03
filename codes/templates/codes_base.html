@@ -49,18 +49,35 @@
     </div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li class="{% block redeem_nav_class %}{% endblock %}">
-            <a href="{% url 'codes:redeem' %}">أدخِل ساعات جديدة</a>
+
+      {% if user.is_authenticated %}
+
+        <li>
+            <a href="{% url 'userena_signout' %}">اخرج</a>
         </li>
         <li class="{% block report_nav_class %}{% endblock %}">
             <a href="{% url 'codes:report' %}">استعرض تقريري</a>
         </li>
+        <li class="{% block redeem_nav_class %}{% endblock %}">
+            <a href="{% url 'codes:redeem' %}">أدخِل ساعات جديدة</a>
+        </li>
+
+      {% else %}
+
+        <li>
+            <a href="{% url 'userena_signin' %}">ادخل</a>
+        </li>
+        <li>
+            <a href="{% url 'userena_signup' %}">سجّل</a>
+        </li>
+
+      {% endif %}
       </ul>
     </div><!--/.nav-collapse -->
   </div>
 </div>
 
-<div class="container">
+<div id="content-container" class="container">
 
     {% if messages %}
         {% for message in messages %}
@@ -70,11 +87,12 @@
         {% endfor %}
     {% endif %}
 
-    {% block content %}{% endblock %}
+    {% block body %}{% block content %}{% endblock %}{% endblock %}
 </div><!-- /.container -->
 	<!-- script references -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 		<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        {% block extrascript %}{% endblock %}
 	</body>
 </html>
 

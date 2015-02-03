@@ -14,13 +14,21 @@
 {% block content %}
 <div class="text-center">
     <img id="logo" src="{% static 'codes/logo.png' %}"/>
-    <h1>أهلًا بك في برنامج تطوّع!</h1>
+    <h1>أهلاً بك في برنامج تطوّع!</h1>
     <p class="lead">برنامج تطوّع هو برنامج لرصد و حساب مشاركاتك التطوعيّة في أنشطة اللجنة الطبية بالندوة العالمية للشباب الإسلامي.<br>
+
+        <!-- TODO: different message if user is signed in/out -->
+    {% if user.is_authenticated %}
+
     يمكنك إدخال ساعات تطوعية جديدة من خلال
         <a href="{% url 'codes:redeem' %}">صفحة إدخال الرموز</a>
         أو
         <a href="{% url 'codes:report' %}">استعراض تقرير بساعاتك التطوعية</a>
         .
+    {% else %}
+        <a href="{% url 'userena_signin' %}">سجّل دخولك</a> لإدخال ساعات جديدة و الاطلاع على تقريرك، أو
+        <a href="{% url 'userena_signup' %}">سجّل</a> إن لم يكن لديك حساب.
+    {% endif %}
     </p>
 
     <br><br>
