@@ -1,18 +1,81 @@
-<html>
-<head>
-    <title>{% block title %}برنامج تطوع{% endblock %}</title>
-</head>
-<body>
+<!DOCTYPE html>{% load staticfiles %}
+<html lang="ar" dir="rtl">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title>تطوّع | {% block title %}{% endblock %}</title>
+		<meta name="generator" content="Bootply" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<style type="text/css">
+            @font-face {font-family: "GE Dinar One"; font-weight: lighter; src: url({% static 'codes/fonts/ge-dinar-one-light.woff' %});}
+            @font-face {font-family: "GE Dinar One"; font-weight: normal; src: url({% static 'codes/fonts/ge-dinar-one-med.woff' %});}
 
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+            body {
+                font-family: "GE Dinar One";
+            }
 
-{% block content %}{% endblock %}
+            .english-field {
+                font-family: Arial;
+            }
 
-</body>
+            .navbar-brand {
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+
+            img#nav-logo {
+                width: auto;
+                height: 100%;
+            }
+		</style>
+        {% block extrastyle %}{% endblock %}
+	</head>
+	<body>
+<div class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <div class="navbar-header navbar-right">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    <a class="navbar-brand" href="{% url 'codes:home' %}">
+        <img id="nav-logo" src="{% static 'codes/logo.png' %}"/>
+    </a>
+    </div>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li class="{% block redeem_nav_class %}{% endblock %}">
+            <a href="{% url 'codes:redeem' %}">أدخِل ساعات جديدة</a>
+        </li>
+        <li class="{% block report_nav_class %}{% endblock %}">
+            <a href="{% url 'codes:report' %}">استعرض تقريري</a>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+
+<div class="container">
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+</div><!-- /.container -->
+	<!-- script references -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+		<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+	</body>
 </html>
+
+<!-- TODO: style signin/out pages -->

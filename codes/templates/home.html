@@ -1,0 +1,32 @@
+{% extends "codes_base.html" %}{% load staticfiles %}
+
+{% block title %}أهلا بك!{% endblock %}
+
+{% block extrastyle %}
+    <style type="text/css">
+        img#logo {
+            width: 200px;
+            height: auto;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <img id="logo" src="{% static 'codes/logo.png' %}"/>
+    <h1>أهلًا بك في برنامج تطوّع!</h1>
+    <p class="lead">برنامج تطوّع هو برنامج لرصد و حساب مشاركاتك التطوعيّة في أنشطة اللجنة الطبية بالندوة العالمية للشباب الإسلامي.<br>
+    يمكنك إدخال ساعات تطوعية جديدة من خلال
+        <a href="{% url 'codes:redeem' %}">صفحة إدخال الرموز</a>
+        أو
+        <a href="{% url 'codes:report' %}">استعراض تقرير بساعاتك التطوعية</a>
+        .
+    </p>
+
+    <br><br>
+
+    <!--<h1 style="color: #888;">-->
+        <!--<span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>-->
+    <!--</h1>-->
+  </div>
+{% endblock %}

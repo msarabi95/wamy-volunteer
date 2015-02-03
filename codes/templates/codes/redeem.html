@@ -1,9 +1,43 @@
 {% extends "codes_base.html" %}
 
+{% block title %}أدخِل ساعات جديدة{% endblock %}
+
+{% block redeem_nav_class %}active{% endblock %}
+
+{% block extrastyle %}
+<style type="text/css">
+    .input-wide {
+        width: 60%;
+        margin: auto;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit"/>
-</form>
+
+    {% for error in form.string.errors %}
+        <div class="alert alert-danger">
+            {{ error|escape }}
+        </div>
+    {% endfor %}
+
+    <div class="text-center">
+
+        <h1>أدخِل ساعات جديدة</h1>
+
+        <p class="lead">أدخل الرمز الإلكتروني الذي حصلت عليه.</p>
+        <form method="post">
+            {% csrf_token %}
+
+        <div class="form-group{% if form.string.errors %} has-error{% endif %}">
+            {{ form.string }}
+        </div>
+
+        <div class="form-group">
+            <input class="btn btn-success" type="submit" value="أدخِل"/>
+        </div>
+
+        </form>
+
+    </div>
 {% endblock %}

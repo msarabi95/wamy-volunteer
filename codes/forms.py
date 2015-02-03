@@ -40,11 +40,16 @@ class CreateCodeForm(forms.Form):
 
 
 class RedeemCodeForm(forms.Form):
-    string = forms.CharField(max_length=CODE_STRING_LENGTH)
+    string = forms.CharField(max_length=CODE_STRING_LENGTH, label="")
 
     def __init__(self, user, *args, **kwargs):
         super(RedeemCodeForm, self).__init__(*args, **kwargs)
         self.user = user  # Save the user as this is important for validation
+        self.fields['string'].widget.attrs = {"class": "form-control input-lg input-wide english-field", "placeholder": u"أدخل رمزًا..."}
+
+    # TODO: remove spaces and dashes from string before validating
+    # TODO: make sure validation covers all cases
+    # TODO: translate validation messages
 
     def clean_string(self):
         """
