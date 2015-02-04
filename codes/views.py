@@ -5,6 +5,7 @@ from django.db.models.aggregates import Sum
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from codes.forms import RedeemCodeForm
+from teams.forms import EvaluationForm
 
 
 @login_required
@@ -15,14 +16,17 @@ def redeem(request):
     """
     if request.method == "POST":
         form = RedeemCodeForm(request.user, request.POST)
-        if form.is_valid():
+        eval_form = EvaluationForm(request.POST)
+        if form.is_valid() and eval_form.is_valid():
             result = form.process()
             messages.add_message(request, *result)
+            eval_form.save(form.code.event, request.user)
             return HttpResponseRedirect(reverse("codes:redeem"))
     else:
         code = request.GET.get("code")
         form = RedeemCodeForm(request.user, initial={'string': code})
-    return render(request, "codes/redeem.html", {"form": form})
+        eval_form = EvaluationForm()
+    return render(request, "codes/redeem.html", {"form": form, "eval_form": eval_form})
 
 
 @login_required

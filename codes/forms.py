@@ -87,6 +87,8 @@ class RedeemCodeForm(forms.Form):
             code.date_redeemed = timezone.now()
             code.save()
 
+            self.code = code
+
             message = u"تم إدخال الرمز بنجاح."
             message_type = messages.SUCCESS
 
