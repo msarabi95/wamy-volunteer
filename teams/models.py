@@ -6,6 +6,7 @@ from django.db import models
 
 class Team(models.Model):
     name = models.CharField(u"الاسم", max_length=128)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return self.name
@@ -18,6 +19,7 @@ class Team(models.Model):
 class Event(models.Model):
     name = models.CharField(u"الاسم", max_length=128)
     team = models.ForeignKey(Team, related_name="events", verbose_name=u"الفريق")
+    date_created = models.DateTimeField(auto_now_add=True)
     # allow_multiple = models.BooleanField(default=False)  # allow multiple codes to be submitted per user per event
 
     def admin_links(self):
@@ -67,11 +69,13 @@ class EvaluationCriterion(models.Model):
 class Evaluation(models.Model):
     event = models.ForeignKey(Event, related_name="evaluations", verbose_name=u"النشاط")
     user = models.ForeignKey(User, related_name="evaluations", verbose_name=u"المستخدم")
+    date = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return "Evaluation of %s by %s" % (self.event.__unicode__(), self.user.__unicode__())
 
     class Meta:
+        unique_together = ("event", "user")
         verbose_name = u"تقييم"
         verbose_name_plural = u"التقييمات"
 
