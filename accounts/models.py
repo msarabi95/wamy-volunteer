@@ -30,6 +30,9 @@ class UserProfile(UserenaBaseProfile):
         (5, u"السنة الخامسة"),
         (6, u"السنة السادسة"),
         (7, u"سنة الامتياز"),
+        (8, u"طبيب مقيم"),
+        (9, u"طبيب أخصائي"),
+        (10, u"استشاري"),
     )
 
     academic_year = models.PositiveIntegerField(u"السنة الدراسية", choices=ACADEMIC_YEAR_CHOICES, default=1)
