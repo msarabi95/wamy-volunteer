@@ -27,15 +27,15 @@ class EventAdmin(admin.ModelAdmin):
     search_fields = ("name", "team__name")
     inlines = (OrderTabularInline, )
 
+    EVALUATION_COUNT = "evaluation_count"  # the field name
+
     def get_evaluation_fields(self):
         """
         Return a list of field names for evaluation fields; in the format `criterion_X_avg`, where X
-        is the PK of each evaluation criterion.
+        is the PK of each evaluation criterion, in addition to `evaluation_count` field.
         """
-        eval_fields = []
-        for criterion in EvaluationCriterion.objects.all():
-            eval_fields.append("criterion_%s_avg" % criterion.pk)
-        return tuple(eval_fields)
+        return tuple(["criterion_%s_avg" % criterion.pk
+                      for criterion in EvaluationCriterion.objects.all()] + [self.EVALUATION_COUNT])
 
     def get_readonly_fields(self, request, obj=None):
         """
@@ -54,10 +54,17 @@ class EventAdmin(admin.ModelAdmin):
 
     def __getattr__(self, item):
         """
+        For evaluation count field, return a callable that returns the evaluation count for an event.
         For evaluation fields, which are dynamically added, return a callable that returns the average
          responses for a certain criterion in a certain event.
         """
-        if item in self.get_evaluation_fields():
+        if item == self.EVALUATION_COUNT:
+            def func(obj):
+                return obj.evaluations.count()
+            func.short_description = u"عدد التقييمات"
+            return func
+
+        elif item in self.get_evaluation_fields():
             def get_criterion(str):
                 return EvaluationCriterion.objects.get(pk=int(str.split("_")[1]))
 
