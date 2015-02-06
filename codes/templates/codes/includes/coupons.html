@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{{ title }}</title>
+    <title>{{ order }}</title>
     <style type="text/css">
 
     @font-face {font-family: "GE Dinar One"; font-weight: lighter; src: url({% static 'codes/fonts/ge-dinar-one-light.woff' %});}
@@ -91,7 +91,8 @@
 <body>
     {% for category in order.get_categories %}
 
-    <h2>{{ category.name }}</h2>
+    {# category name #}
+    <h2>{{ category.first.category.name }}</h2>
 
     {% for code in category %}
 
@@ -135,8 +136,10 @@
 
     {% endfor %}
 
-
-    <!-- pagebreak -->
+        {% if not forloop.last %}
+        <!-- pagebreak -->
+        <p style="page-break-after:always;"></p>
+        {% endif %}
 
     {% endfor %}
 </body>
