@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.db.models import Sum
 from userena.admin import UserenaAdmin
-from accounts.models import UserProfile
+from accounts.models import UserProfile, State
 
 
 class UserProfileInline(admin.StackedInline):
@@ -29,3 +29,4 @@ admin.site.unregister(UserProfile)
 
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(State)

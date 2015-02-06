@@ -19,6 +19,7 @@ class UserProfile(UserenaBaseProfile):
 
     # Special information
     mobile = models.CharField(u"رقم الجوال", max_length=30)
+    state = models.ForeignKey("State", related_name="user_profiles", verbose_name=u"المنطقة", null=True)
     university = models.CharField(u"الجامعة", max_length=128)  # CharField or ForeignKey?
 
     ACADEMIC_YEAR_CHOICES = (
@@ -46,3 +47,14 @@ class UserProfile(UserenaBaseProfile):
     class Meta:
         verbose_name = u"ملف مستخدم"
         verbose_name_plural = u"ملفات المستخدمين"
+
+
+class State(models.Model):
+    name = models.CharField(max_length=128, verbose_name=u"الاسم")
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = u"منطقة"
+        verbose_name_plural = u"المناطق"
