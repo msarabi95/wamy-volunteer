@@ -1,0 +1,60 @@
+[
+{
+    "fields": {
+        "max_score": 5,
+        "description": "\u0645\u0627 \u062a\u0642\u064a\u064a\u0645\u0643 \u0644\u062c\u0648\u062f\u0629 \u062a\u0646\u0638\u064a\u0645 \u0627\u0644\u0646\u0634\u0627\u0637\u061f",
+        "label": "\u062c\u0648\u062f\u0629 \u0627\u0644\u062a\u0646\u0638\u064a\u0645"
+    },
+    "model": "teams.evaluationcriterion",
+    "pk": 3
+},
+{
+    "fields": {
+        "max_score": 5,
+        "description": "\u0643\u064a\u0641 \u062a\u0642\u064a\u0645 \u0645\u0644\u0627\u0621\u0645\u0629 \u0627\u0644\u0646\u0634\u0627\u0637 \u0644\u0627\u0647\u062a\u0645\u0627\u0645\u0627\u062a\u0643\u061f",
+        "label": "\u0645\u0644\u0627\u0621\u0645\u0629 \u0627\u0644\u0646\u0634\u0627\u0637"
+    },
+    "model": "teams.evaluationcriterion",
+    "pk": 4
+},
+{
+    "fields": {
+        "date_created": "2015-02-04T05:53:38.061Z",
+        "name": "\u0627\u0644\u0645\u062c\u0644\u0633 \u0627\u0644\u0625\u0634\u0631\u0627\u0641\u064a"
+    },
+    "model": "teams.team",
+    "pk": 1
+},
+{
+    "fields": {
+        "date_created": "2015-02-06T13:33:00.580Z",
+        "name": "\u0627\u0644\u0641\u0631\u064a\u0642 \u0627\u0644\u0639\u0644\u0645\u064a"
+    },
+    "model": "teams.team",
+    "pk": 2
+},
+{
+    "fields": {
+        "date_created": "2015-02-06T13:33:07.701Z",
+        "name": "\u0627\u0644\u0641\u0631\u064a\u0642 \u0627\u0644\u062a\u0648\u0639\u0648\u064a"
+    },
+    "model": "teams.team",
+    "pk": 3
+},
+{
+    "fields": {
+        "date_created": "2015-02-06T13:33:16.882Z",
+        "name": "\u0627\u0644\u0641\u0631\u064a\u0642 \u0627\u0644\u0627\u062c\u062a\u0645\u0627\u0639\u064a"
+    },
+    "model": "teams.team",
+    "pk": 4
+},
+{
+    "fields": {
+        "date_created": "2015-02-06T13:33:23.173Z",
+        "name": "\u0627\u0644\u0641\u0631\u064a\u0642 \u0627\u0644\u0631\u064a\u0627\u0636\u064a"
+    },
+    "model": "teams.team",
+    "pk": 5
+}
+]
