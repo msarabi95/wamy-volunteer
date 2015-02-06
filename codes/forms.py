@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib import messages
 from django.utils import timezone
-from codes.models import Category, Code, Order, CODE_STRING_LENGTH
+from codes.models import Category, Code, Order
 
 
 class CreateCodeForm(forms.Form):
@@ -17,8 +17,25 @@ class CreateCodeForm(forms.Form):
         self.event = event
         self._created_codes = False  # A flag to prevent multiple processing of the same form
         for idx, category in enumerate(Category.objects.all()):
-            self.fields["category_%s" % (idx + 1)] = forms.IntegerField(label=category.name)
-            # TODO: make it possible to leave the field blank (considered as 0); only 1 should be more than 0
+            self.fields["category_%s" % (idx + 1)] = forms.IntegerField(label=category.name, required=False)
+            # `clean()` (below) will make sure that at least one field has a non-zero value.
+
+    def clean(self):
+        """
+        Make sure that at least one category has a non-zero value.
+        """
+        cleaned_data = super(CreateCodeForm, self).clean()
+
+        # If all the values are either 0's or None's (no non-zero values), raise a validation error
+        if all([(cleaned_data[field] is None or cleaned_data[field] == 0) for field in cleaned_data]):
+            raise forms.ValidationError(u"أدخل، على الأقل، قيمة واحدة أكبر من الصفر.")
+
+        # Replace None's with 0's
+        for field in cleaned_data:
+            if cleaned_data[field] is None:
+                cleaned_data[field] = 0
+
+        return cleaned_data
 
     def create_codes(self):
         """
@@ -40,16 +57,12 @@ class CreateCodeForm(forms.Form):
 
 
 class RedeemCodeForm(forms.Form):
-    string = forms.CharField(max_length=CODE_STRING_LENGTH, label="")
+    string = forms.CharField(label="")
 
     def __init__(self, user, *args, **kwargs):
         super(RedeemCodeForm, self).__init__(*args, **kwargs)
         self.user = user  # Save the user as this is important for validation
         self.fields['string'].widget.attrs = {"class": "form-control input-lg input-wide english-field", "placeholder": u"أدخل رمزًا..."}
-
-    # TODO: remove spaces and dashes from string before validating
-    # TODO: make sure validation covers all cases
-    # TODO: translate validation messages
 
     def clean_string(self):
         """
@@ -58,20 +71,21 @@ class RedeemCodeForm(forms.Form):
         (2) code is available.
         (3) user doesn't have another code in the same event.
         """
-        code_string = self.cleaned_data['string']
+        # Make sure the code is uppercase, without any spaces or hyphens
+        code_string = self.cleaned_data['string'].upper().replace(" ", "").replace("-", "")
 
         # first, check that code exists
         if not Code.objects.filter(string=code_string).exists():
-            raise forms.ValidationError("Code does not exist.", code="DoesNotExist")
+            raise forms.ValidationError(u"هذا الرمز غير صحيح.", code="DoesNotExist")
         else:
             code = Code.objects.get(string=code_string)
             # next, check that code is available
             if code.user is not None:
-                raise forms.ValidationError("Code is not available.", code="Unavailable")
+                raise forms.ValidationError(u"هذا الرمز غير متوفر.", code="Unavailable")
             else:
                 # finally, check that user doesn't have another code in the same event
                 if Code.objects.filter(event=code.event, user=self.user).exists():  # and not code.event.allow_multiple:
-                    raise forms.ValidationError("User has another code in the same event.", code="HasOtherCode")
+                    raise forms.ValidationError(u"لديك رمز آخر في نفس النشاط.", code="HasOtherCode")
 
         return code_string
 
