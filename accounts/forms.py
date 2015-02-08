@@ -26,8 +26,8 @@ class CustomSignupForm(SignupForm):
     mobile = forms.CharField(label=UserProfile._meta.get_field('mobile').verbose_name, max_length=30)
     state = forms.ChoiceField(label=UserProfile._meta.get_field('state').verbose_name,
                               choices=State.objects.values_list('id', 'name'))
-    university = forms.CharField(label=UserProfile._meta.get_field('university').verbose_name,
-                                 help_text=u"اسم الجامعة كاملاً باللغة العربية")
+    university = forms.CharField(label="%s (%s)" % (UserProfile._meta.get_field('university').verbose_name,
+                                 u"الاسم كاملاً باللغة العربية") )
     academic_year = forms.ChoiceField(label=UserProfile._meta.get_field('academic_year').verbose_name,
                                       choices=UserProfile.ACADEMIC_YEAR_CHOICES)
     specialty = forms.CharField(label=UserProfile._meta.get_field('specialty').verbose_name, max_length=128)
