@@ -16,8 +16,8 @@ class CreateCodeForm(forms.Form):
         super(CreateCodeForm, self).__init__(*args, **kwargs)
         self.event = event
         self._created_codes = False  # A flag to prevent multiple processing of the same form
-        for idx, category in enumerate(Category.objects.all()):
-            self.fields["category_%s" % (idx + 1)] = forms.IntegerField(label=category.name, required=False)
+        for category in Category.objects.all():
+            self.fields["category_%s" % category.pk] = forms.IntegerField(label=category.name, required=False)
             # `clean()` (below) will make sure that at least one field has a non-zero value.
 
     def clean(self):
