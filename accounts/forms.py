@@ -32,6 +32,10 @@ class CustomSignupForm(SignupForm):
                                       choices=UserProfile.ACADEMIC_YEAR_CHOICES)
     specialty = forms.CharField(label=UserProfile._meta.get_field('specialty').verbose_name, max_length=128)
 
+    def __init__(self, *args, **kwargs):
+        super(CustomSignupForm, self).__init__(*args, **kwargs)
+        self.fields['username'].regex = r'^[a-zA-Z0-9_\.]*$'
+
     def clean(self):
         # Call the parent class's clean function.
         cleaned_data = super(CustomSignupForm, self).clean()
